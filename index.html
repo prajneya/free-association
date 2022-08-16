@@ -25,7 +25,7 @@
 
     var nextkey = "n";
 
-    var words = ["apple", "ball", "cat", "d", "e", "6", "7", "8", "9", "10","11"]
+    var words = ['चींटी', 'बंदर', 'जहाज', 'हाथ', 'कुल्हाड़ी', 'बिल्ला', 'थैला', 'गेंद', 'बैंड', 'जूता', 'कटोरा']
     var wordcounter = 0
 
     var largefontsize = 60;
@@ -46,11 +46,13 @@
       }
 
       // if it's the recall phase
-      if (key.keyCode == 13 && currPhase == STUDYPHASE) {
+      if (key.keyCode == 13) {
           // if enter, go onto the next word
           recallseq = document.getElementById("hindiInput").value;
+          console.log(recallseq)
           allrecallseq = allrecallseq + ',' + recallseq;
-          document.getElementById('recallseqout').value = allrecallseq;
+          console.log(allrecallseq)
+          document.getElementById("wordseqout").value = allrecallseq
 
           document.getElementById("hindiInput").value = "";
           document.getElementById("hindiInput").style.display = "none";
