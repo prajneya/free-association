@@ -1,0 +1,36 @@
+*{
+  color: white;
+}
+
+a{
+  display: none;
+}
+
+input{
+  border: 5px;
+  color: black;
+}
+
+select{
+  color: black;
+}
+
+option{
+  color: black;
+}
+
+.experiment-container{
+  border-radius: 10px;
+  background-color: #485461;
+  background-image: linear-gradient(180deg, #485461 0%, #28313b 74%);
+}
+
+.disclamier-container{
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.awDiv{
+  background-color: black !important;
+}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://hinkhoj.com/common/js/keyboard.js"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title></title>
+  </head>
+  <body>
+
+
+    <script type="text/javascript">
+
+    var fixation = '+';
+    var blank = '';
+
+    // ID constants for performance
+    const NORESP = 10;
+    const STUDYPHASE = 1;
+    const MATHPHASE = 2;
+    const RECALLPHASE = 3;
+    const FEEDBACK = 4;
+
+    var nextkey = "n";
+
+    var words = ["apple", "ball", "cat", "d", "e", "6", "7", "8", "9", "10","11"]
+    var wordcounter = 0
+
+    var largefontsize = 60;
+    var instructionreadtime = 4000;
+
+    var allrecallseq = '';
+
+    // key press listener
+    document.onkeydown = function(key){ processResponse(key);};
+
+    // get the key and respond
+    function processResponse(key){
+      if(String.fromCharCode(key.keyCode).toLowerCase() == nextkey.toLowerCase()){
+      // if they pressed the next key
+        if(currPhase == STUDYPHASE){
+          doStudyPhase();
+        }
+      }
+
+      // if it's the recall phase
+      if (key.keyCode == 13 && currPhase == STUDYPHASE) {
+          // if enter, go onto the next word
+          recallseq = document.getElementById("hindiInput").value;
+          allrecallseq = allrecallseq + ',' + recallseq;
+          document.getElementById('recallseqout').value = allrecallseq;
+
+          document.getElementById("hindiInput").value = "";
+          document.getElementById("hindiInput").style.display = "none";
+          document.getElementById("hindiInput_awTable").style.display = "none";
+
+          console.log(allrecallseq)
+
+          setTimeout("doTestPhase()", 200); // quick pause before next trial
+        }
+    }
+
+    function submitHit(){
+      document.getElementById("wordseqout").value = allrecallseq
+    }
+
+    function doTestPhase(){
+      document.getElementById('instructions').innerHTML = 'Study the word and write down the first word that comes to your mind. Press ENTER when you are done. You will see a total of 10 words.';
+
+
+      if (wordcounter == 11){ // when the study phase is finished
+
+        // now move onto the distractor task
+        var nextinstructions = "<div style='font-size:24px'>Thank you for your time!. Please fill the form below and hit the submit button</div>";
+        updateText(nextinstructions);
+        return;
+      }
+
+      //eventStartTime = Math.floor(Date.now()); // get time in milliseconds
+      // print out the word pair
+      var imtag = words[wordcounter];
+      tempfeedback = imtag;
+      tempfeedback = tempfeedback.replace("<br><br>", ", ");
+      tempfeedback = tempfeedback.replace("+", "");
+      //console.log(feedbacklist);
+      updateText("<div style='font-size:" + largefontsize + "px'>" + imtag + "</div>");
+      wordcounter++;
+
+      document.getElementById("hindiInput").style.display = "inline-block";
+      document.getElementById("hindiInput_awTable").style.display = "table";
+    }
+
+    function doStudyPhase(){
+      document.getElementById('instructions').innerHTML = 'Study the word and write down the first word that comes to your mind.  Press ENTER when you are done.';
+
+
+      if (wordcounter == 1){ // when the study phase is finished
+
+        // now move onto the distractor task
+        var nextinstructions = "<div style='font-size:24px'>Next: This was the sample task. Now you will do the actual task with a larger number of words.</div>";
+        updateText(nextinstructions);
+        setTimeout("doTestPhase()", instructionreadtime);
+        return;
+      }
+
+      //eventStartTime = Math.floor(Date.now()); // get time in milliseconds
+      // print out the word pair
+      var imtag = words[wordcounter];
+      tempfeedback = imtag;
+      tempfeedback = tempfeedback.replace("<br><br>", ", ");
+      tempfeedback = tempfeedback.replace("+", "");
+      //console.log(feedbacklist);
+      updateText("<div style='font-size:" + largefontsize + "px'>" + imtag + "</div>");
+      wordcounter++;
+
+      document.getElementById("hindiInput").style.display = "inline-block";
+      document.getElementById("hindiInput_awTable").style.display = "table";
+    }
+
+    // builds the full sequence with both words and fixations, as well as timings
+    function buildFullSequence(){
+      console.log("Doing")
+    }
+
+    // update the experimental text
+    function updateText(text){
+      document.getElementById("experimentdisplay").innerHTML = text;
+    }
+
+    // preload and then start
+    function buttonPress(){
+      // disable the Start Button
+      document.getElementById("startbutton").innerHTML = "Experiment Running...";
+      document.getElementById("startbutton").disabled = true;
+
+      // take away the instructions
+      updateText("");
+
+      // study phase
+      console.log("Starting study phase!");
+      buildFullSequence();
+      var imtag = '<div style="font-size:24px">We will start off with a practice of all parts of the task with an example.<br><br>Type <b>N</b> to continue.</div>';
+      updateText(imtag);
+      currPhase = STUDYPHASE;
+    }
+
+    </script>
+
+    <div class="container">
+      <div class="experiment-container my-1 p-3">
+        <div class="m-5">
+          <div class="disclamier-container p-3">
+            This is a multi-part experiment on word memory.
+            <br>
+            First, you will have a practice example with 1 word. The entire experiment will take approximately 5 minutes.
+            <br>
+            This experiment works for users of Google Chrome, Safari, and Firefox (we do not support Internet Explorer).
+            <br>
+            Please only participate if Hindi is your native language.
+          </div>
+
+          <div class="disclamier-container mt-5 p-3">
+            <p><span id="instructions" class="text-left"><b>Task Instructions: </b>Stepwise instructions will be shown here. Please press the start button below to start the experiment.</span></span></p>
+
+            <div class="text-center">
+              <span id="experimentdisplay" style="font-family:helvetica;font-size:20px"></span>
+
+              <script>CreateCustomHindiTextBox("hindiInput","",40,true)</script>
+
+
+
+              <h3><button type="button" id="startbutton" onclick="buttonPress()" class="btn btn-info my-2">Click to Start</button></h3><br><br>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="experiment-container my-1 p-3">
+        <form name="contact" method="POST" data-netlify="true">
+          <input type = "hidden" name = "wordseq" id = "wordseqout" value = "">
+          Please also provide the following demographic information for reporting purposes:
+          <br><br>
+          <div class="row">
+            <div class="col-6">
+              <b>Gender:</b>
+              <br>
+              <br>
+              <b>Age:</b>
+              <br>
+              <br>
+              <b>What is/are your native language(s)? </b>
+              <br>
+              <br>
+              <b>Highest level of education (or currently pursuing)?</b>
+            </div>
+            <div class="col-6">
+              <select name="gender">
+                <option value="blank">Select Option</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="na">Other / No response</option>
+              </select>
+              <br>
+              <br>
+              <input type="text" name="age" size=3>
+              <br>
+              <br>
+              <input type="text" name="language" size=50>
+              <br>
+              <br>
+              <select name="education">
+                <option value="blank">Select Option</option>
+                <option value="none">No schooling completed</option>
+                <option value="middle">Nursery school to 8th grade</option>
+                <option value="somehigh">Some high school, no diploma</option>
+                <option value="high">High school graduate, diploma, or the equivalent</option>
+                <option value="somecollege">Some college credit, no degree</option>
+                <option value="tradeschool">Trade/technical/vocational training</option>
+                <option value="associate">Associate degree</option>
+                <option value="bachelors">Bachelor's degree</option>
+                <option value="masters">Master's degree</option>
+                <option value="professional">Professional degree</option>
+                <option value="doctorate">Doctorate degree</option>
+              </select>
+            </div>
+
+          </div>
+          <br><br>
+          <b>Click here to submit your HIT.</b> Only submit when completed the above experiment, or you won't get full payment! If you decide to stop halfway, you can click this to end.<br><br>
+          <div class="text-center">
+            <button type="submit" id="submitbutton" class="btn btn-success" onclick="submitHit()">SUBMIT HIT </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("hindiInput").style.display = "none";
+    </script>
+  </body>
+</html>
